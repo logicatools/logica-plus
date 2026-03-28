@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogicA++ Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass-card { 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(4px); 
+            border: 1px solid rgba(255,255,255,0.08); 
+        }
+        .premium-tag {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        .locked-overlay {
+            background: rgba(15, 23, 42, 0.3);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="p-6">
+
+<div id="login-page" class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+    <div class="mb-8">
+        <h1 class="text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-2">
+            LogicA++
+        </h1>
+        <p class="text-slate-400 text-sm">The Ultimate Smart AI Humanizer</p>
+    </div>
+
+    <div class="glass-card p-8 rounded-3xl w-full max-w-sm border-t-4 border-t-blue-500">
+        <h2 class="text-xl font-bold mb-2">Selamat Datang</h2>
+        <p class="text-xs text-slate-500 mb-8">Masuk dengan akun Google Anda untuk melanjutkan!</p>
+        
+        <button onclick="loginGoogle()" class="w-full flex items-center justify-center gap-3 py-4 bg-white text-slate-900 rounded-2xl font-bold text-sm shadow-xl active:scale-95 transition-all">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" class="w-5 h-5">
+            Continue with Google
+        </button>
+        
+        <p class="mt-6 text-[10px] text-slate-600 uppercase tracking-widest font-bold">Encrypted & Verified by Google</p>
+    </div>
+</div>
+
+<div id="dashboard-page" class="hidden">
+    <div class="flex justify-between items-start mb-10">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                LogicA++
+            </h1>
+            <p class="text-xs text-slate-500 mt-1 uppercase tracking-widest">Hello, <span id="user-name">Creator</span></p>
+        </div>
+        <div id="status-badge" class="bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg">
+            <span class="text-[10px] font-bold text-slate-400">FREE MEMBER</span>
+        </div>
+    </div>
+
+    <div class="grid gap-5">
+        <div onclick="openMicroDrama()" class="glass-card p-5 rounded-2xl border-l-4 border-l-purple-500 active:scale-95 transition-all shadow-lg shadow-purple-500/5">
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-purple-500 text-white flex items-center justify-center text-lg">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="pr-6">
+                    <h3 class="font-bold text-white text-sm uppercase tracking-tight">Micro-Drama Script Builder</h3>
+                    <p class="text-[11px] text-slate-300 leading-tight mt-1">Generator alur cerita pendek 60 detik yang memicu interaksi tinggi penonton.</p>
+                </div>
+                <i class="fas fa-arrow-right text-purple-400 ml-auto"></i>
+            </div>
+        </div>
+        
+        <div id="anti-ai-card" onclick="openAntiAI()" class="glass-card p-5 rounded-2xl relative overflow-hidden active:scale-95 transition-all">
+            <div class="absolute top-3 right-3 premium-tag px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-tighter">
+                <i class="fas fa-crown mr-1"></i> Premium
+            </div>
+            <div class="flex items-center gap-4 opacity-70">
+                <div class="w-11 h-11 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">
+                    <i class="fas fa-mask"></i>
+                </div>
+                <div class="pr-12">
+                    <h3 class="font-bold text-slate-200 text-sm italic">"Anti-AI" Content Humanizer</h3>
+                    <p class="text-[11px] text-slate-400 leading-tight mt-1">Ubah pola teks bot jadi karakter manusia asli & verifikasi fakta instant.</p>
+                </div>
+            </div>
+            <div class="absolute inset-0 locked-overlay"></div>
+        </div>
+
+        <div id="trend-card" onclick="openTrendMatcher()" class="glass-card p-5 rounded-2xl relative overflow-hidden active:scale-95 transition-all">
+            <div class="absolute top-3 right-3 premium-tag px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-tighter">
+                <i class="fas fa-crown mr-1"></i> Premium
+            </div>
+            <div class="flex items-center gap-4 opacity-70">
+                <div class="w-11 h-11 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="pr-12">
+                    <h3 class="font-bold text-slate-200 text-sm italic">Cross-Platform "Trend Matcher"</h3>
+                    <p class="text-[11px] text-slate-400 leading-tight mt-1">Dapatkan notifikasi tren viral terbaru harian yang cocok dengan niche Anda.</p>
+                </div>
+            </div>
+            <div class="absolute inset-0 locked-overlay"></div>
+        </div>
+    </div>
+
+    <div class="mt-10 p-6 rounded-2xl border border-blue-500/30 bg-blue-500/5 text-center">
+        <p class="text-[10px] text-blue-300 uppercase font-bold tracking-[0.2em] mb-3">Upgrade Access</p>
+        <h4 class="text-sm font-medium text-slate-300 mb-5">Gunakan semua fitur tanpa batas?</h4>
+        <button class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-black text-xs uppercase tracking-widest transition-colors shadow-lg shadow-blue-900/40 mb-7 active:scale-95 transition-all">
+            Aktivasi LogicA++ Pro
+        </button>
+        <div class="mb-9">
+            <p class="text-[9px] text-slate-500 uppercase font-bold mb-4 tracking-widest text-center">Supported Payments</p>
+            <div class="flex flex-wrap justify-center items-center gap-x-5 gap-y-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg" class="h-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Logo_ovo_purple.svg" class="h-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Gopay_logo.svg" class="h-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal_logo.svg" class="h-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/QRIS_logo.svg" class="h-3">
+            </div>
+        </div>
+        <div class="border-t border-slate-800 pt-5">
+            <a href="mailto:logica.plus.plus@gmail.com" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-full">
+                <i class="fas fa-headset text-blue-400 text-xs"></i>
+                <span class="text-[10px] text-slate-300">Support: logica.plus.plus@gmail.com</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const supabaseUrl = 'https://aumsrjhdhawwkvyqvqry.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1bXNyamh4ZGhhd3drdnlxdnJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MDg2ODQsImV4cCI6MjA5MDI4NDY4NH0.cS6eMFCfQcy7ROEBoBGgpgnK81Mo1nquWggAvgC2IV0';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function loginGoogle() {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: { redirectTo: window.location.origin }
+        });
+        if (error) alert("Error: " + error.message);
+    }
+
+    async function checkUser() {
+        const { data: { user } } = await supabase.auth.getUser();
+        const loginPage = document.getElementById('login-page');
+        const dashboardPage = document.getElementById('dashboard-page');
+
+        if (user) {
+            loginPage.classList.add('hidden');
+            dashboardPage.classList.remove('hidden');
+            document.getElementById('user-name').innerText = user.user_metadata.full_name || "Creator";
+
+            const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+            if (profile && profile.role === 'premium') {
+                unlockPremiumFeatures();
+            }
+        } else {
+            loginPage.classList.remove('hidden');
+            dashboardPage.classList.add('hidden');
+        }
+    }
+
+    function unlockPremiumFeatures() {
+        document.querySelectorAll('.locked-overlay').forEach(el => el.remove());
+        document.querySelectorAll('.opacity-70').forEach(el => el.classList.remove('opacity-70'));
+        const badge = document.getElementById('status-badge');
+        badge.innerHTML = '<span class="text-[10px] font-bold text-yellow-500">PRO MEMBER</span>';
+        badge.className = "bg-yellow-500/20 border border-yellow-500/50 px-3 py-1 rounded-lg";
+    }
+
+    checkUser();
+    
+    // ... (Kode Inisialisasi Supabase tetap sama)
+
+// 4. LOGIKA PERINTAH SETIAP FITUR
+function openAntiAI() {
+    // Mengecek apakah elemen pengunci masih ada
+    const isLocked = document.querySelector('#anti-ai-card .locked-overlay');
+    if (isLocked) {
+        alert("Fitur ini khusus Member Premium. Silakan Aktivasi Pro untuk membuka!");
+    } else {
+        alert("Membuka Dashboard Anti-AI Humanizer...");
+        // Di sini nantinya Anda arahkan ke halaman khusus Anti-AI
+        // window.location.href = "/humanizer.html";
+    }
+}
+
+function openMicroDrama() {
+    // Fitur ini Gratis (Free)
+    alert("Membuka Micro-Drama Script Builder...");
+    // window.location.href = "/drama-builder.html";
+}
+
+function openTrendMatcher() {
+    const isLocked = document.querySelector('#trend-card .locked-overlay');
+    if (isLocked) {
+        alert("Fitur Trend Matcher terkunci. Silakan upgrade ke Premium!");
+    } else {
+        alert("Mencari tren viral terbaru untuk niche Anda...");
+        // window.location.href = "/trend-matcher.html";
+    }
+}
+
+</script>
+</body>
+</html>
