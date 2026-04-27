@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogicA++ AI | Viral Video Clipper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { background: #070b14; color: #e2e8f0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .viral-badge { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+        .btn-primary { background: linear-gradient(135deg, #3b82f6, #2563eb); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-2xl mx-auto space-y-8">
+        <header class="text-center">
+            <h1 class="text-4xl font-extrabold tracking-tight text-white">LogicA++ <span class="text-blue-500">AI</span></h1>
+            <p class="text-gray-400 mt-2">Automatic Viral Clip Generator</p>
+        </header>
+
+        <div class="glass p-8 rounded-3xl shadow-2xl space-y-6">
+            <div class="space-y-4">
+                <label class="block text-sm font-semibold text-gray-300">Paste Link Video (YouTube/TikTok/Reels)</label>
+                <div class="flex flex-col md:flex-row gap-3">
+                    <input id="videoUrl" type="text" placeholder="https://www.youtube.com/watch?v=..." 
+                        class="flex-1 bg-slate-900 border border-slate-700 rounded-xl p-4 text-sm outline-none focus:border-blue-500 transition-all">
+                    <button onclick="analisaViral()" class="btn-primary text-white font-bold px-8 py-4 rounded-xl text-sm">
+                        GENERATE CLIPS
+                    </button>
+                </div>
+                <div class="text-center text-gray-500 text-xs">Atau klik untuk <span class="text-blue-400 underline cursor-pointer">Upload File Video</span></div>
+            </div>
+        </div>
+
+        <div id="loadingStatus" class="hidden text-center space-y-4">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-blue-500 border-r-2 border-transparent"></div>
+            <p id="statusText" class="text-sm text-blue-400 italic font-medium">AI sedang membedah video...</p>
+        </div>
+
+        <div id="resultArea" class="hidden space-y-6">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <span class="viral-badge text-[10px] px-2 py-1 rounded-full uppercase">AI Recommended</span>
+                Opsi Potongan Viral
+            </h3>
+            
+            <div id="clipList" class="grid gap-4">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        async function panggilGemini(promptUser) {
+    // Kita panggil jalur internal Vercel, bukan URL Google langsung
+    const url = "/api/generate"; 
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptUser }] }]
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            return "Error: " + data.error.message;
+        }
+
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            return data.candidates[0].content.parts[0].text;
+        }
+        
+        return "AI tidak memberikan respon.";
+    } catch (err) {
+        return "Gagal koneksi ke API: " + err.message;
+    }
+}
+
+        async function analisaViral() {
+    const videoUrl = document.getElementById('videoUrl').value;
+    if(!videoUrl) return alert("Paste link videonya dulu!");
+
+    // Munculkan loading
+    document.getElementById('loadingStatus').classList.remove('hidden');
+
+    try {
+        // KITA PANGGIL BACKEND VERCEL, BUKAN GOOGLE LANGSUNG
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{ 
+                        text: `Analisa video ini: ${videoUrl}. Cari 3 momen paling viral. Berikan hasil dalam format JSON: [{start: "menit:detik", end: "menit:detik", desc: "alasan viral", rating: "0-100%"}]` 
+                    }]
+                }]
+            })
+        });
+
+        const data = await response.json();
+        
+        // Tampilkan hasil ke UI (seperti kode rekomendasi yang saya berikan sebelumnya)
+        tampilkanHasil(data); 
+
+    } catch (err) {
+        alert("Gagal menganalisa: " + err.message);
+    } finally {
+        document.getElementById('loadingStatus').classList.add('hidden');
+    }
+}
+    </script>
+</body>
+</html>
